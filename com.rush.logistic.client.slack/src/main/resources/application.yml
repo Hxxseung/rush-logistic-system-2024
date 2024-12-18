@@ -2,9 +2,9 @@ spring:
   application:
     name: slack
   datasource:
-    url: jdbc:postgresql://localhost:5432/rush
-    username: postgres
-    password: 1111
+    url: jdbc:postgresql://${SLACK_DB_URL}
+    username: ${SLACK_DB_USER}
+    password: ${SLACK_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
