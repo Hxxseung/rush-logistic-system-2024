@@ -49,6 +49,8 @@ dependencies {
 
 	runtimeOnly 'org.postgresql:postgresql'
 
+	implementation "me.paulschwarz:spring-dotenv:4.0.0"
+
 	annotationProcessor 'org.projectlombok:lombok'
 	// QFile
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
