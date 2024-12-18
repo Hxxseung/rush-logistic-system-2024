@@ -10,9 +10,9 @@
 
 ## 👨‍👩‍👧‍👦 Our Team
 
-|        박지혜        |        강희승         |   김주한   |      김한준      |
-|:-----------------:|:------------------:|:-------:|:-------------:|
-| Order<br>Delivery | Company<br>Product | Hub<br> | User<br>Slack |
+| 박지혜<br>[@jeeheaG](https://github.com/jeeheaG) | 강희승<br>[@Hxxseung](https://github.com/Hxxseung) | 김주한<br>[@Hany-Kim](https://github.com/Hany-Kim) | 김한준<br>[@wkdehf217](https://github.com/wkdehf217) |
+|:---------------------------------------------:|:-----------------------------------------------:|:-----------------------------------------------:|:-----------------------------------------------:|
+|               Order<br>Delivery               |               Company<br>Product                |                     Hub<br>                     |                  User<br>Slack                  |
 
 <br>
 
@@ -27,6 +27,9 @@
 [📘 테이블 명세서](https://docs.google.com/spreadsheets/d/1xiXvHmo2wijXeWZmYdi3OQq0XHNwmVog8oWbCUE3zuE/edit?gid=2112576932#gid=2112576932)<br>
 
 [📙 API 명세서](https://functional-iron-b15.notion.site/API-15e5724d1eee80d9a313ccb8c9f88bfe?pvs=4)
+
+[📺 시연 영상 (Youtube)](https://youtu.be/VwLhALtTsYA?si=80umj_Rzz0c6PpgL)
+
 
 ## ERD
 ![rush-logistic-system-2024](https://github.com/user-attachments/assets/37c36d73-cb23-49e8-bf84-ad1a3148ad96)
@@ -60,13 +63,67 @@
 ### 📩 Slack
 - Slack 과의 연동을 통해 물류 관련 알림을 실시간으로 받아볼 수 있어, 신속한 협업과 문제 해결이 가능합니다.
 
+
 ## 💡 Trouble Shooting
 - 문제 정의 : 사용자 인가 관리
-    - AS-IS : 메인 비즈니스 로직과 섞여 퍼져있는 검증 로직
-    - TO-BE : gateway 에서 토큰 복호화 일괄 처리, 커스텀 어노테이션과 Util 클래스 사용하여 로직 단일화
+  - AS-IS : 메인 비즈니스 로직과 섞여 퍼져있는 검증 로직
+  - TO-BE : gateway 에서 토큰 복호화 일괄 처리, 커스텀 어노테이션과 Util 클래스 사용하여 로직 단일화
+    <img width="1167" alt="image" src="https://github.com/user-attachments/assets/63315793-784f-42c3-986e-c94f7ed8df61" />
+  
 - 문제 정의 : 검색 구현
-    - AS-IS : 복잡한 검색 조건 및 불필요하게 많은 페이징 정보
-    - TO-BE : QueryDsl 인터페이스 상속으로 Predicate 기반 검색 구현, PagedModel 사용으로 불필요한 데이터 전파 방지
+  - AS-IS : 복잡한 검색 조건 및 불필요하게 많은 페이징 정보
+  - TO-BE : QueryDsl 인터페이스 상속으로 Predicate 기반 검색 구현, PagedModel 사용으로 불필요한 데이터 전파 방지
+  
 - 문제 정의 : DB와 Response 반환값 불일치
-    - AS-IS : Updated_at 등 현재 데이터 값이 아닌 1차 캐싱 데이터 반환
-    - TO-BE : EntityManager flush, clear를 통한 캐싱 데이터 삭제 후 ReLoad를 통한 실시간 값 반영
+  - AS-IS : Updated_at 등 현재 데이터 값이 아닌 1차 캐싱 데이터 반환
+  - TO-BE : EntityManager flush, clear를 통한 캐싱 데이터 삭제 후 ReLoad를 통한 실시간 값 반영
+    
+- 문제 정의 : Hub 간 경로 비효율
+  - AS-IS : 기존 P2P 방식으로 허브 간 경로를 설정했을 때에 너무 비효율적인 배송 경로를 사용하게 됨
+  - TO-BE : 허브 간 경로 탐색에 dijkstra 알고리즘을 적용, 출발, 도착 허브 간 최적 경로 사용, 배송 소요시간과 거리 최적화로 효율적인 배송 시스템 구축
+    <img width="1167" alt="image" src="https://github.com/user-attachments/assets/ada8e7e0-aa39-4285-afbb-f9b481f2208f" />
+
+- 문제 정의 : Naver Map API Response Body 파싱 문제
+  - AS-IS : Naver Map API로 응답을 받았으나 body에 정상적으로 담기지 않음, 출력된 문자열을 그대로 URL에 담기 위해 복사/붙여넣기 해보니 일붜 공백은 NBSP로 이루어진 것을 확인, [\\\s\\\u00A0]+ 을 통해 공백과 NBSP로 이루어진 문자를 모두 %20으로 변환 → 실패
+  - TO-BE : URI인코딩 과정에서 잘못된 인코딩이 있었음,명시적으로 encode 타입 지정
+    <img width="709" alt="image" src="https://github.com/user-attachments/assets/9d860b4e-6bc0-421b-b197-0e659f545c8a" />
+    
+- 문제 정의 : Gateway 에서의 인증 처리
+  - AS-IS : 각 서비스에서 SecurityContextHolder를 사용
+  - TO-BE : 게이트웨이의 역할을 인증까지로 제한, 권한 검증(인가)는 User 서비스에서만 처리
+  
+  
+  
+---
+
+![슬라이드1](https://github.com/user-attachments/assets/4339f2a1-da7a-4eee-82ad-f45268846ceb)
+
+![슬라이드2](https://github.com/user-attachments/assets/78990dc8-2b89-425b-abb0-09f63b22767a)
+
+![슬라이드3](https://github.com/user-attachments/assets/8c702b17-b410-4d2d-aaf7-92cdf1687448)
+
+![슬라이드4](https://github.com/user-attachments/assets/1ce12049-aa27-4352-88d6-0a602c2fcb3c)
+
+![슬라이드5](https://github.com/user-attachments/assets/13fd0816-34b6-466c-b1dd-6a1b445a78f0)
+
+![슬라이드6](https://github.com/user-attachments/assets/e2bb2664-bb97-4f03-8e1a-5cfa33a83724)
+
+![슬라이드7](https://github.com/user-attachments/assets/083ce072-1871-4079-b7e6-4c3b5e0f55b0)
+
+![슬라이드8](https://github.com/user-attachments/assets/8e0361fb-c714-4297-8844-273614fbe6fc)
+
+![슬라이드9](https://github.com/user-attachments/assets/af6a7e0c-0a21-4368-a5c1-24d8b311aa94)
+
+![슬라이드10](https://github.com/user-attachments/assets/f744d14f-b097-4b00-9c2a-e43600cb00b2)
+
+![슬라이드11](https://github.com/user-attachments/assets/34c58c22-e269-4c1f-8f40-329eb370bb8c)
+
+![슬라이드12](https://github.com/user-attachments/assets/4527183a-73fc-4502-9198-2f17e11077d8)
+
+![슬라이드13](https://github.com/user-attachments/assets/f43e249b-b385-4201-81f1-eb2cf5b184a3)
+
+![슬라이드14](https://github.com/user-attachments/assets/1ecccf3f-e64d-436e-ac31-802902194dbe)
+
+![슬라이드15](https://github.com/user-attachments/assets/ff2b2917-78ea-4b4e-b3df-788fae491297)
+
+![슬라이드17](https://github.com/user-attachments/assets/c35ec3b4-2063-45ec-8947-64741f1c9af0)
