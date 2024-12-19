@@ -20,8 +20,7 @@
 <img src="https://img.shields.io/badge/Intellij IDEA-000000?style=flat&logo=Intellij IDEA&logoColor=white"/> <img src="https://img.shields.io/badge/postman-FF6C37?style=flat&logo=postman&logoColor=white"/><img src="https://img.shields.io/badge/notion-000000?style=flat&logo=notion&logoColor=white"/><img src="https://img.shields.io/badge/slack-4A154B?style=flat&logo=slack&logoColor=white"/><br>
 <img src="https://img.shields.io/badge/MSA -535D6C?style=flat&logo=awesomewm&logoColor=white"/><img src="https://img.shields.io/badge/swagger -85EA2D?style=flat&logo=swagger&logoColor=white"/><img src="https://img.shields.io/badge/Zipkin -FE5F50?style=flat&logo=Zipkin&logoColor=white"/><img src="https://img.shields.io/badge/Docker -2496ED?style=flat&logo=docker&logoColor=white"/><br>
 <img src="https://img.shields.io/badge/Java 17 -C70D2C?style=flat&logo=java&logoColor=white"/><img src="https://img.shields.io/badge/springboot 3.4-6DB33F?style=flat&logo=springboot&logoColor=white"/><img src="https://img.shields.io/badge/springsecurity (Auth,JWT)-6DB33F?style=flat&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/QueryDSL-5395FD?style=flat&logo=QueryDSL&logoColor=white"/><br>
-<img src="https://img.shields.io/badge/postgresql -4169E1?style=flat&logo=postgresql&logoColor=white"/><img src="https://img.shields.io/badge/redis -FF4438?style=flat&logo=redis&logoColor=white"/><img src="https://img.shields.io/badge/GoogleGemini -8E75B2?style=flat&logo=googlegemini&logoColor=white"/><img src="https://img.shields.io/badge/Naver Direction5 -03C75A?style=flat&logo=naver&logoColor=white"/>
-<img src="https://img.shields.io/badge/GoogleGeocode -4285F4?style=flat&logo=googlemaps&logoColor=white"/>
+<img src="https://img.shields.io/badge/postgresql -4169E1?style=flat&logo=postgresql&logoColor=white"/><img src="https://img.shields.io/badge/redis -FF4438?style=flat&logo=redis&logoColor=white"/><img src="https://img.shields.io/badge/GoogleGemini -8E75B2?style=flat&logo=googlegemini&logoColor=white"/><img src="https://img.shields.io/badge/Naver Direction5 -03C75A?style=flat&logo=naver&logoColor=white"/><img src="https://img.shields.io/badge/Naver Geocoding -03C75A?style=flat&logo=naver&logoColor=white"/>
 
 ## 문서 자료
 [📘 테이블 명세서](https://docs.google.com/spreadsheets/d/1xiXvHmo2wijXeWZmYdi3OQq0XHNwmVog8oWbCUE3zuE/edit?gid=2112576932#gid=2112576932)<br>
@@ -78,13 +77,21 @@
   - AS-IS : Updated_at 등 현재 데이터 값이 아닌 1차 캐싱 데이터 반환
   - TO-BE : EntityManager flush, clear를 통한 캐싱 데이터 삭제 후 ReLoad를 통한 실시간 값 반영
     
-- 문제 정의 : Hub 간 경로 비효율
-  - AS-IS : 기존 P2P 방식으로 허브 간 경로를 설정했을 때에 너무 비효율적인 배송 경로를 사용하게 됨
+- 문제 정의 : HUB 간 경로 비효율
+  - AS-IS : 기존 P2P 방식으로 HUB 간 경로를 설정했을 때에 경유지 없이 직접 연결되어 경로는 효율적이나 HUB와 HUB 사이를 이동하는 화물 차량이 불필요하게 많아질 수 있어 너무 비효율적인 배송 경로를 사용하게 됨
+  <br>
+    <img width="354" alt="image" src="https://github.com/user-attachments/assets/3a215b91-ff92-436f-bba2-f11200796027"/>
+  <br>
   - TO-BE : 허브 간 경로 탐색에 dijkstra 알고리즘을 적용, 출발, 도착 허브 간 최적 경로 사용, 배송 소요시간과 거리 최적화로 효율적인 배송 시스템 구축
+  <br>
+    <img width="354" alt="image" src="https://github.com/user-attachments/assets/9aed8b46-1b4e-478b-8448-45a5a63ff381"/>
     <img width="1167" alt="image" src="https://github.com/user-attachments/assets/ada8e7e0-aa39-4285-afbb-f9b481f2208f" />
 
 - 문제 정의 : Naver Map API Response Body 파싱 문제
-  - AS-IS : Naver Map API로 응답을 받았으나 body에 정상적으로 담기지 않음, 출력된 문자열을 그대로 URL에 담기 위해 복사/붙여넣기 해보니 일붜 공백은 NBSP로 이루어진 것을 확인, [\\\s\\\u00A0]+ 을 통해 공백과 NBSP로 이루어진 문자를 모두 %20으로 변환 → 실패
+  - AS-IS : Naver Map API로 응답을 받았으나 body에 정상적으로 담기지 않음
+    - 터미널에 출력된 문자열을 확인해보니 특정 공백이 'NBSP'로 이루어진 것을 확인, [\\\s\\\u00A0]+ 을 통해 공백과 NBSP로 이루어진 문자를 모두 %20으로 변환 → 변환은 성공했으나 여전히 body에 담기지 않음
+      <br>
+      <img width="709" alt="image" src="https://github.com/user-attachments/assets/a703a2f6-d9a3-4f3c-b250-c22c05fc8b08"/>
   - TO-BE : URI인코딩 과정에서 잘못된 인코딩이 있었음,명시적으로 encode 타입 지정
     <img width="709" alt="image" src="https://github.com/user-attachments/assets/9d860b4e-6bc0-421b-b197-0e659f545c8a" />
     
